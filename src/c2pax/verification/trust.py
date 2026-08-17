@@ -25,15 +25,18 @@ class TrustStore:
     def from_pem(cls, path_or_str: str | Path) -> TrustStore:
         """Создает TrustStore из PEM файла или строки с сертификатами."""
         store = cls()
-        if isinstance(path_or_str, (str, Path)):
+        if isinstance(path_or_str, str) and "-----BEGIN" in path_or_str:
+            store.add_claim_signer_pem(path_or_str)
+            return store
+
+        try:
             path = Path(path_or_str)
-            if path.exists() and path.is_file():
+            if path.is_file():
                 content = path.read_text(encoding="utf-8")
                 store.add_claim_signer_pem(content)
                 return store
-            if isinstance(path_or_str, str) and "-----BEGIN CERTIFICATE-----" in path_or_str:
-                store.add_claim_signer_pem(path_or_str)
-                return store
+        except OSError:
+            pass
 
         raise CertificateError(f"Не удалось загрузить PEM сертификат: {path_or_str}")
 

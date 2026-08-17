@@ -128,15 +128,16 @@ class AssetSourceAdapter:
             return self._stream
 
         if isinstance(self._source, (str, Path)):
-            path = Path(self._source)
-            if not path.exists():
-                raise AssetNotFoundError(f"Файл ассета не найден: {path}")
-            if not path.is_file():
-                raise AssetNotFoundError(f"Указанный путь не является файлом: {path}")
-            self._path = path
-            self._file_size = path.stat().st_size
-            self._stream = open(path, "rb")
-            self._owns_stream = True
+            try:
+                path = Path(self._source)
+                if not path.is_file():
+                    raise AssetNotFoundError(f"Файл ассета не найден: {path}")
+                self._path = path
+                self._file_size = path.stat().st_size
+                self._stream = open(path, "rb")
+                self._owns_stream = True
+            except OSError as e:
+                raise AssetNotFoundError(f"Файл ассета не найден: {self._source}") from e
 
         elif isinstance(self._source, (bytes, bytearray, memoryview)):
             raw_bytes = bytes(self._source)

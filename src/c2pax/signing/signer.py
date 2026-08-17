@@ -45,26 +45,34 @@ class Signer:
     ) -> Signer:
         """Создает Signer из путей к PEM-файлам или строкового содержимого."""
         cert_content = ""
-        if isinstance(certificate, (str, Path)):
-            p = Path(certificate)
-            if p.exists() and p.is_file():
-                cert_content = p.read_text(encoding="utf-8")
-            elif isinstance(certificate, str) and "-----BEGIN CERTIFICATE-----" in certificate:
-                cert_content = certificate
-            else:
-                raise CertificateError(f"Файл сертификата не найден: {certificate}")
+        if isinstance(certificate, str) and "-----BEGIN CERTIFICATE-----" in certificate:
+            cert_content = certificate
+        else:
+            try:
+                p = Path(certificate)
+                if p.is_file():
+                    cert_content = p.read_text(encoding="utf-8")
+                else:
+                    raise CertificateError(f"Файл сертификата не найден: {certificate}")
+            except OSError as e:
+                raise CertificateError(f"Файл сертификата не найден: {certificate}") from e
 
         key_content = ""
-        if isinstance(private_key, (str, Path)):
-            p = Path(private_key)
-            if p.exists() and p.is_file():
-                key_content = p.read_text(encoding="utf-8")
-            elif isinstance(private_key, str) and (
-                "-----BEGIN" in private_key and "KEY-----" in private_key
-            ):
-                key_content = private_key
-            else:
-                raise CertificateError(f"Файл закрытого ключа не найден: {private_key}")
+        if (
+            isinstance(private_key, str)
+            and "-----BEGIN" in private_key
+            and "KEY-----" in private_key
+        ):
+            key_content = private_key
+        else:
+            try:
+                p = Path(private_key)
+                if p.is_file():
+                    key_content = p.read_text(encoding="utf-8")
+                else:
+                    raise CertificateError(f"Файл закрытого ключа не найден: {private_key}")
+            except OSError as e:
+                raise CertificateError(f"Файл закрытого ключа не найден: {private_key}") from e
 
         signer = cls(
             certificate_pem=cert_content,
