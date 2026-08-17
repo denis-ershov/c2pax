@@ -138,9 +138,7 @@ class Builder:
         title: str | None = None,
     ) -> Builder:
         """Добавляет связанный исходный ассет или компонент (Ingredient)."""
-        rel_str = (
-            relationship.value if isinstance(relationship, Relationship) else relationship
-        )
+        rel_str = relationship.value if isinstance(relationship, Relationship) else relationship
         ing_title = title
         if not ing_title and isinstance(path_or_source, (str, Path)):
             ing_title = Path(path_or_source).name
