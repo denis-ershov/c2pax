@@ -37,4 +37,8 @@
   - Исправлена совместимость с **Python 3.10** в `src/c2pax/signing/builder.py`: убран импорт `Self` из `typing` (появившийся только в Python 3.11), возвращаемые типы методов переведены на нативный `Builder` при поддержке `from __future__ import annotations`.
   - Обновлены workflows [ci.yml](.github/workflows/ci.yml) и [security.yml](.github/workflows/security.yml): принудительное обновление `setuptools>=83.0.0` для устранения уязвимости `PYSEC-2026-3447` в раннерах GitHub Actions.
   - Проведено форматирование всей кодовой базы с помощью `ruff format` (`src/c2pax/backend/c2pa_rs.py`).
+- **Релиз и сборка дистрибутивов PyPI**:
+  - Выполнена сборка дистрибутивов `dist/c2pax-0.1.0-py3-none-any.whl` и `dist/c2pax-0.1.0.tar.gz` через `build`.
+  - Успешно пройдена валидация метаданных и разметки через `twine check` (`PASSED`).
+  - Добавлен GitHub Actions workflow [publish.yml](.github/workflows/publish.yml) с поддержкой PyPI Trusted Publishing (OIDC).
 - **Тестовый комплекс**: Юнит-, интеграционные и security-тесты на поврежденные/поддельные ассеты.
