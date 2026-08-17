@@ -1,0 +1,119 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "c2pax"
+version = "0.1.0"
+description = "Python-native SDK для инспекции, верификации и работы с графом происхождения (Provenance) стандарта C2PA Content Credentials"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+    { name = "c2pax team" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Multimedia :: Graphics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "c2pa-python>=0.6.0",
+    "cryptography>=41.0.0",
+]
+
+[project.optional-dependencies]
+cli = [
+    "rich>=13.0.0",
+    "click>=8.0.0",
+]
+pydantic = [
+    "pydantic>=2.0.0",
+]
+fastapi = [
+    "fastapi>=0.100.0",
+    "python-multipart>=0.0.6",
+    "httpx>=0.24.0",
+]
+all = [
+    "rich>=13.0.0",
+    "click>=8.0.0",
+    "pydantic>=2.0.0",
+    "fastapi>=0.100.0",
+    "python-multipart>=0.0.6",
+    "httpx>=0.24.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+    "httpx>=0.24.0",
+]
+
+[project.scripts]
+c2pax = "c2pax.cli.main:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/c2pax"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "C4",  # flake8-comprehensions
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501", # line length handled by formatter
+    "RUF001", # Cyrillic characters in strings
+    "RUF002", # Cyrillic characters in docstrings
+    "RUF003", # Cyrillic characters in comments
+]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = [
+    "c2pa.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "asyncio: mark test as asyncio",
+]
