@@ -137,9 +137,7 @@ class C2paRsBackend(BaseC2paBackend):
         c2pa_mod = self._get_c2pa_module()
 
         cert_bytes = (
-            signer_cert_pem.encode("utf-8")
-            if isinstance(signer_cert_pem, str)
-            else signer_cert_pem
+            signer_cert_pem.encode("utf-8") if isinstance(signer_cert_pem, str) else signer_cert_pem
         )
         key_bytes = (
             signer_private_key_pem.encode("utf-8")

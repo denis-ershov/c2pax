@@ -18,11 +18,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install security tools
+      - name: Install security tools and upgrade base packaging
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip "setuptools>=83.0.0" wheel
           pip install bandit pip-audit .[all]
       - name: Static Code Security Analysis (Bandit)
         run: bandit -r src/ -ll -i
       - name: Supply Chain Dependency Audit (pip-audit)
-        run: pip-audit
+        run: pip-audit --desc
