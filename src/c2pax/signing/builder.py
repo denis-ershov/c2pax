@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, BinaryIO, Self
+from typing import Any, BinaryIO
 
 from c2pax.backend import get_default_backend
 from c2pax.backend.base import BaseC2paBackend
@@ -24,17 +24,17 @@ class Builder:
         self._custom_assertions: list[dict[str, Any]] = []
         self._ingredients: list[tuple[dict[str, Any], AssetSource]] = []
 
-    def set_title(self, title: str) -> Self:
+    def set_title(self, title: str) -> Builder:
         """Устанавливает название создаваемого ассета."""
         self._title = title
         return self
 
-    def set_format(self, mime_format: str) -> Self:
+    def set_format(self, mime_format: str) -> Builder:
         """Устанавливает MIME-тип выходного медиа-контейнера."""
         self._format = mime_format
         return self
 
-    def set_claim_generator(self, generator: str) -> Self:
+    def set_claim_generator(self, generator: str) -> Builder:
         """Устанавливает идентификатор программного генератора."""
         self._claim_generator = generator
         return self
@@ -45,7 +45,7 @@ class Builder:
         software: str | None = None,
         timestamp: datetime | None = None,
         parameters: dict[str, Any] | None = None,
-    ) -> Self:
+    ) -> Builder:
         """Добавляет действие (c2pa.action) в историю манифеста."""
         time_val = timestamp or datetime.now(timezone.utc)
         action_dict: dict[str, Any] = {
@@ -65,7 +65,7 @@ class Builder:
         tool: str,
         model_name: str | None = None,
         prompt: str | None = None,
-    ) -> Self:
+    ) -> Builder:
         """Добавляет утверждение о генерации контента с помощью искусственного интеллекта."""
         data: dict[str, Any] = {"tool": tool}
         if model_name:
@@ -85,7 +85,7 @@ class Builder:
         self,
         tool: str,
         model_name: str | None = None,
-    ) -> Self:
+    ) -> Builder:
         """Добавляет утверждение об использовании ИИ при редактировании/содействии."""
         data: dict[str, Any] = {"tool": tool}
         if model_name:
@@ -103,7 +103,7 @@ class Builder:
         self,
         data_mining_allowed: bool = True,
         ai_training_allowed: bool = True,
-    ) -> Self:
+    ) -> Builder:
         """Настраивает политику сбора данных и обучения нейросетей (c2pa.data_mining)."""
         entries: dict[str, Any] = {
             "c2pa.data_mining": {
@@ -121,7 +121,7 @@ class Builder:
         )
         return self
 
-    def add_assertion(self, label: str, data: dict[str, Any]) -> Self:
+    def add_assertion(self, label: str, data: dict[str, Any]) -> Builder:
         """Добавляет произвольное пользовательское утверждение (custom assertion)."""
         self._custom_assertions.append(
             {
@@ -136,10 +136,10 @@ class Builder:
         path_or_source: AssetSource,
         relationship: Relationship | str = Relationship.PARENT_OF,
         title: str | None = None,
-    ) -> Self:
+    ) -> Builder:
         """Добавляет связанный исходный ассет или компонент (Ingredient)."""
         rel_str = (
-            relationship.value if isinstance(relationship, Relationship) else str(relationship)
+            relationship.value if isinstance(relationship, Relationship) else relationship
         )
         ing_title = title
         if not ing_title and isinstance(path_or_source, (str, Path)):

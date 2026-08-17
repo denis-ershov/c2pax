@@ -32,7 +32,8 @@
   - Добавлена англоязычная версия документации [README.en.md](README.en.md) с двусторонней навигацией.
   - Добавлен расширенный набор бейджей в `README.md` и `README.en.md` (License, Python 3.10+, PyPI, CI, Mypy Strict, Ruff, Security Hardened, C2PA Compliant, PRs Welcome).
   - Добавлен раздел «Сторонние репозитории и благодарности» с указанием всех используемых библиотек (`c2pa-python`, `c2pa-rs`, `cryptography`, `rich`, `click`, `pydantic`, `fastapi`) и их лицензий.
-- **CI/CD и исправления безопасности**:
+- **CI/CD и исправления совместимости**:
+  - Исправлена совместимость с **Python 3.10** в `src/c2pax/signing/builder.py`: убран импорт `Self` из `typing` (появившийся только в Python 3.11), возвращаемые типы методов переведены на нативный `Builder` при поддержке `from __future__ import annotations`.
   - Обновлены workflows [ci.yml](.github/workflows/ci.yml) и [security.yml](.github/workflows/security.yml): принудительное обновление `setuptools>=83.0.0` для устранения уязвимости `PYSEC-2026-3447` в раннерах GitHub Actions.
   - Проведено форматирование всей кодовой базы с помощью `ruff format` (`src/c2pax/backend/c2pa_rs.py`).
 - **Тестовый комплекс**: Юнит-, интеграционные и security-тесты на поврежденные/поддельные ассеты.
